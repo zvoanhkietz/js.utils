@@ -7,8 +7,7 @@ async function PromisePool(handler, data, concurency){
         .map(async (iterator) => {
             for(const [index, item] of iterator){
                 console.log(`Request[${index}] info of ${item}`);
-                r = await handler(item);
-                results.push(r);
+                results.push(await handler(item));
                 console.log(`Recv[${index}] info of ${item}`);
                 sleep(1000)
             }
@@ -19,7 +18,7 @@ async function PromisePool(handler, data, concurency){
 
 data = ["mojombo", "defunkt", "pjhyett", "wycats", "ezmobius", "ivey", "evanphx", "vanpelt", "wayneeseguin", "brynary", "kevinclark"];
 
-results = await PromisePool(async (item) => {
+results = await PromisePool( async (item) => {
     return await $.get(`https://api.github.com/users/${item}`)
 }, data, 3);
 console.log(results);
