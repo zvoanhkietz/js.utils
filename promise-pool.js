@@ -18,7 +18,7 @@ results = await PromisePool( async (index, item) => {
     console.log(`==>Request[${index}] info of ${item}`);
     const rand = Math.floor(Math.random() * (3000 - 1000) + 1000);
     await sleep(rand);
-    console.log(`Waiting response...${rand}ms`);
+    console.log(`Waiting response...${rand} ms`);
     console.log(`<=====Recv[${index}] info of ${item}`);
     return rand;
 }, data, 3);
