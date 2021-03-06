@@ -14,7 +14,7 @@ async function PromisePool(handler, data, concurency){
 
 // RUN
 data = ["mojombo", "defunkt", "pjhyett", "wycats", "ezmobius", "ivey", "evanphx", "vanpelt", "wayneeseguin", "brynary", "kevinclark"];
-results = await PromisePool( async (item) => {
+results = await PromisePool( async (index, item) => {
     console.log(`==>Request[${index}] info of ${item}`);
     const rand = Math.floor(Math.random() * (3000 - 1000) + 1000);
     await sleep(rand);
