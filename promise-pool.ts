@@ -8,9 +8,9 @@ async function promisePool<T>(handler: Function, data: T[], concurency = 10): Pr
         .fill(data.entries())
         .map(async (iterator) => {
             for (const [index, item] of iterator) {
-                console.log(`==>Request[${index}] info of ${item}`);
+                console.log(`==>Request[${index}] info of '${item}'`);
                 results.push(await handler(item));
-                console.log(`<=====Recv[${index}] info of ${item}`);
+                console.log(`<=====Recv[${index}] info of '${item}'`);
             }
         });
     await Promise.all(workers);
