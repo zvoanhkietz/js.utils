@@ -34,6 +34,6 @@ async function PromisePool(handler, data, concurency){
         console.log(`Response[${index}] ${item}...${rand} ms`);
         console.log(`<=====Recv[${index}] info of ${item}`);
         results[index] = {name: item, ts: `${rand} ms`};
-    }, data, 5);
+    }, data, 3);
     console.log(results);
 })()
