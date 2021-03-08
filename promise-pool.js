@@ -1,20 +1,20 @@
 sleep = async (ts) => new Promise((rs)=> setTimeout(rs, ts));
 async function PromisePool(handler, data, concurency){
-    const results = [];
+    const iterator = data.entries();
     workers = new Array(concurency)
-        .fill(data.entries())
+        .fill(iterator)
         .map(async (iterator) => {
             for(const [index, item] of iterator){
-                results.push(await handler(index, item));
+                await handler(index, item);
             }
         });
     await Promise.all(workers);
-    return results;
 }
 
 // RUN
 (async () => {
-    const data = ["mojombo",
+    const data = [
+        "mojombo",
         "defunkt",
         "pjhyett",
         "wycats",
@@ -26,13 +26,14 @@ async function PromisePool(handler, data, concurency){
         "brynary",
         "kevinclark"
     ];
-    const results = await PromisePool( async (index, item) => {
+    const results = [];
+    await PromisePool( async (index, item) => {
         console.log(`==>Request[${index}] info of ${item}`);
         const rand = Math.floor(Math.random() * (3000 - 1000) + 1000);
         await sleep(rand);
-        console.log(`Waiting response...${rand} ms`);
+        console.log(`Response[${index}] ${item}...${rand} ms`);
         console.log(`<=====Recv[${index}] info of ${item}`);
-        return rand;
-    }, data, 3);
+        results[index] = {name: item, ts: `${rand} ms`};
+    }, data, 5);
     console.log(results);
 })()
