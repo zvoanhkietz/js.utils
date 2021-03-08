@@ -31,8 +31,7 @@ async function PromisePool(handler, data, concurency){
         console.log(`==>Request[${index}] info of ${item}`);
         const rand = Math.floor(Math.random() * (3000 - 1000) + 1000);
         await sleep(rand);
-        console.log(`Response[${index}] ${item}...${rand} ms`);
-        console.log(`<=====Recv[${index}] info of ${item}`);
+        console.log(`<=====Recv[${index}] info of ${item} in ${rand} ms`);
         results[index] = {name: item, ts: `${rand} ms`};
     }, data, 3);
     console.log(results);
