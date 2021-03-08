@@ -5,7 +5,7 @@ async function PromisePool(handler, data, concurency){
         .fill(iterator)
         .map(async (iterator) => {
             for(const [index, item] of iterator){
-                await handler(index, item);
+                await handler(item, index);
             }
         });
     await Promise.all(workers);
@@ -27,7 +27,7 @@ async function PromisePool(handler, data, concurency){
         "kevinclark"
     ];
     const results = [];
-    await PromisePool( async (index, item) => {
+    await PromisePool( async (item, index) => {
         console.log(`==>Request[${index}] info of ${item}`);
         const rand = Math.floor(Math.random() * (3000 - 1000) + 1000);
         await sleep(rand);
