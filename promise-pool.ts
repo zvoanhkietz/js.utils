@@ -7,7 +7,7 @@ async function promisePool<T>(handler: Function, data: T[], concurency = 10){
         .fill(data.entries())
         .map(async (iterator) => {
             for (const [index, item] of iterator) {
-                await handler(index, item);
+                await handler(item, index);
             }
         });
     await Promise.all(workers);
@@ -30,7 +30,7 @@ async function promisePool<T>(handler: Function, data: T[], concurency = 10){
         "kevinclark"
     ];
     const results: {[key:string]:string}[] = [];
-    await promisePool(async (index: number, item: string) => {
+    await promisePool(async (item: string, index: number) => {
         console.log(`==>Request[${index}] info of '${item}'`);
         const rand = Math.floor(Math.random() * (3000 - 1000) + 1000);
         await sleep(rand);
