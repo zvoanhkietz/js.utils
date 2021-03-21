@@ -50,11 +50,9 @@ function roundToInt(value: number, mode: string) {
 }
 
 function round(value: number, precision = 0, mode = 'ROUND_HALF_UP') {
-    let p;
-
     value = castFloat(value);
     precision = castInt(precision);
-    p = Math.pow(10, precision);
+    let p = Math.pow(10, precision);
 
     if (isNaN(value) || !isFinite(value)) {
         return value;
