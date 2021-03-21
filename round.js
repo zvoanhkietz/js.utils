@@ -2,7 +2,7 @@
  * Round a number to int
  *
  * @param {number} value 
- * @param {string} mode ROUND_HALF_DOWN | ROUND_HALF_EVEN | ROUND_HALF_ODD
+ * @param {string} mode ROUND_HALF_UP | ROUND_HALF_DOWN | ROUND_HALF_EVEN | ROUND_HALF_ODD
  * @returns int
  */
 function roundToInt(value, mode) {
@@ -23,7 +23,7 @@ function roundToInt(value, mode) {
  *
  * @param {number} value 
  * @param {number} precision 
- * @param {string} mode ROUND_HALF_DOWN | ROUND_HALF_EVEN | ROUND_HALF_ODD
+ * @param {string} mode ROUND_HALF_UP | ROUND_HALF_DOWN | ROUND_HALF_EVEN | ROUND_HALF_ODD
  * @returns float
  */
 function round(value, precision = 0, mode = 'ROUND_HALF_UP') {
