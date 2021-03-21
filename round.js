@@ -1,39 +1,82 @@
-function round(value, fractionDigits) {
-    const strNum = String(value);
-    if (strNum.indexOf('e+') != -1) {
-        // Can't round numbers this large because their string representation
-        // contains an exponent, like 9.99e+37
-        throw new Error("number of value too large");
-    }
-    if (strNum.indexOf('.') == -1) {
-        return parseInt(strNum);
-    }
+function castInt(value) {
+    const type = typeof value
 
-    let [beforeDot, afterDot] = strNum.split('.');
-    let result;
-
-    afterDot = afterDot.slice(0, fractionDigits);
-    if (afterDot[fractionDigits] < 5) {
-        result = beforeDot + '.' + afterDot;
-    } else if (/^9+$/.test(afterDot)) {
-        // If we need to round up a number like 1.9999, increment the integer
-        // before the decimal Dot and discard the fractional part.
-        result = Number(beforeDot) + 1;
-    } else {
-        // Starting from the last digit, increment digits until we find one
-        // that is not 9, then stop
-        let i = fractionDigits - 1;
-        while (true) {
-            if (afterDot[i] == '9') {
-                afterDot = afterDot.substr(0, i) + '0' + afterDot.substr(i + 1);
-            } else {
-                afterDot = afterDot.substr(0, i) + (Number(afterDot[i]) + 1) + afterDot.substr(i + 1);
-                break;
+    switch (type) {
+        case 'number':
+            if (isNaN(value) || !isFinite(value)) {
+                // from PHP 7, NaN and Infinity are casted to 0
+                return 0
             }
-            i--;
-        }
 
-        result = beforeDot + '.' + afterDot;
+            return value < 0 ? Math.ceil(value) : Math.floor(value)
+        case 'string':
+            return parseInt(value, 10) || 0
+        case 'boolean':
+        // fall through
+        default:
+            return +!!value
     }
-    return parseFloat(result.replace(/0+$/, ''));
 }
+
+function castFloat(value) {
+    const type = typeof value
+
+    switch (type) {
+        case 'number':
+            return value
+        case 'string':
+            return parseFloat(value) || 0
+        case 'boolean':
+        // fall through
+        default:
+            // PHP docs state, that for types other than string
+            // conversion is {input type}->int->float
+            return castInt(value)
+    }
+}
+
+function roundToInt(value, mode) {
+    let tmp = Math.floor(Math.abs(value) + 0.5)
+
+    if (
+        (mode === 'ROUND_HALF_DOWN' && value === (tmp - 0.5)) ||
+        (mode === 'ROUND_HALF_EVEN' && value === (0.5 + 2 * Math.floor(tmp / 2))) ||
+        (mode === 'ROUND_HALF_ODD' && value === (0.5 + 2 * Math.floor(tmp / 2) - 1))) {
+        tmp -= 1
+    }
+
+    return value < 0 ? -tmp : tmp
+}
+
+function round(value, precision = 0, mode = 'ROUND_HALF_UP') {
+    let p;
+
+    value = castFloat(value)
+    precision = castInt(precision)
+    p = Math.pow(10, precision)
+
+    if (isNaN(value) || !isFinite(value)) {
+        return value
+    }
+
+    // if value already integer and positive precision
+    // then nothing to do, return early
+    if (Math.trunc(value) === value && precision >= 0) {
+        return value
+    }
+
+    const preRoundPrecision = 14 - Math.floor(Math.log10(Math.abs(value)))
+
+    if (preRoundPrecision > precision && preRoundPrecision - 15 < precision) {
+        value = roundToInt(value * Math.pow(10, preRoundPrecision), mode)
+        value /= Math.pow(10, Math.abs(precision - preRoundPrecision))
+    } else {
+        value *= p
+    }
+
+    value = roundToInt(value, mode)
+
+    return value / p
+}
+
+console.log(round(0.945, 2));
