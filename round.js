@@ -1,41 +1,3 @@
-// refer: https://locutus.io/php/math/round/
-function castInt(value) {
-    const type = typeof value
-
-    switch (type) {
-        case 'number':
-            if (isNaN(value) || !isFinite(value)) {
-                // from PHP 7, NaN and Infinity are casted to 0
-                return 0
-            }
-
-            return value < 0 ? Math.ceil(value) : Math.floor(value)
-        case 'string':
-            return parseInt(value, 10) || 0
-        case 'boolean':
-        // fall through
-        default:
-            return +!!value
-    }
-}
-
-function castFloat(value) {
-    const type = typeof value
-
-    switch (type) {
-        case 'number':
-            return value
-        case 'string':
-            return parseFloat(value) || 0
-        case 'boolean':
-        // fall through
-        default:
-            // PHP docs state, that for types other than string
-            // conversion is {input type}->int->float
-            return castInt(value)
-    }
-}
-
 function roundToInt(value, mode) {
     let tmp = Math.floor(Math.abs(value) + 0.5)
 
@@ -50,31 +12,28 @@ function roundToInt(value, mode) {
 }
 
 function round(value, precision = 0, mode = 'ROUND_HALF_UP') {
-    value = castFloat(value)
-    precision = castInt(precision)
-    let p = Math.pow(10, precision)
+    let p = Math.pow(10, precision);
 
     if (isNaN(value) || !isFinite(value)) {
-        return value
+        return value;
     }
 
     // if value already integer and positive precision
     // then nothing to do, return early
     if (Math.trunc(value) === value && precision >= 0) {
-        return value
+        return value;
     }
 
-    const preRoundPrecision = 14 - Math.floor(Math.log10(Math.abs(value)))
+    const preRoundPrecision = 14 - Math.floor(Math.log10(Math.abs(value)));
 
     if (preRoundPrecision > precision && preRoundPrecision - 15 < precision) {
-        value = roundToInt(value * Math.pow(10, preRoundPrecision), mode)
-        value /= Math.pow(10, Math.abs(precision - preRoundPrecision))
+        value = roundToInt(value * Math.pow(10, preRoundPrecision), mode);
+        value /= Math.pow(10, Math.abs(precision - preRoundPrecision));
     } else {
-        value *= p
+        value *= p;
     }
 
-    value = roundToInt(value, mode)
+    value = roundToInt(value, mode);
 
-    return value / p
+    return value / p;
 }
-
