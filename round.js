@@ -1,3 +1,4 @@
+// refer: https://locutus.io/php/math/round/
 function castInt(value) {
     const type = typeof value
 
@@ -79,4 +80,3 @@ function round(value, precision = 0, mode = 'ROUND_HALF_UP') {
     return value / p
 }
 
-console.log(round(0.945, 2));
