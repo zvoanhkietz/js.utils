@@ -1,3 +1,10 @@
+/**
+ * Round a number to int
+ *
+ * @param {number} value 
+ * @param {string} mode ROUND_HALF_DOWN | ROUND_HALF_EVEN | ROUND_HALF_ODD
+ * @returns int
+ */
 function roundToInt(value: number, mode: string) {
     let tmp = Math.floor(Math.abs(value) + 0.5)
 
@@ -11,6 +18,14 @@ function roundToInt(value: number, mode: string) {
     return value < 0 ? -tmp : tmp
 }
 
+/**
+ * Round number to float
+ *
+ * @param {number} value 
+ * @param {number} precision 
+ * @param {string} mode ROUND_HALF_DOWN | ROUND_HALF_EVEN | ROUND_HALF_ODD
+ * @returns float
+ */
 function round(value: number, precision = 0, mode = 'ROUND_HALF_UP') {
     let p = Math.pow(10, precision);
 
